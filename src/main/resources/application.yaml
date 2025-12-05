@@ -1,3 +1,7 @@
 spring:
   application:
     name: Secure App
+  thymeleaf:
+    cache: false
+    prefix: "classpath:/templates/"
+    suffix: ".html"
