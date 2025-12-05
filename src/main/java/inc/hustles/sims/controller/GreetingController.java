@@ -41,9 +41,11 @@ public class GreetingController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@RequestParam String username, @RequestParam String password){
+    public String registerUser(@RequestParam String username,
+                               @RequestParam String password,
+                               @RequestParam String role){
         try{
-            userDetailsService.registerUser(username, password);
+            userDetailsService.registerUser(username, password, role);
         }catch (Exception userAlreadyExists){
             return "redirect:/register?error";
         }
