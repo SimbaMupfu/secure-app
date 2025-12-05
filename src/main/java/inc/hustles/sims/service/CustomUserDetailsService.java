@@ -27,4 +27,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .roles("USER")
                 .build();
     }
+
+    public void registerUser(String username, String password) throws Exception {
+        if(users.containsKey(username)){
+            throw new Exception("User already exists");
+        }else{
+            String encodedPassword = passwordEncoder.encode(password);
+            users.put(username, new User(username, encodedPassword));
+        }
+    }
 }
