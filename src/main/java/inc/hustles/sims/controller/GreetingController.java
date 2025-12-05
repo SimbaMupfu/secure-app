@@ -1,9 +1,11 @@
 package inc.hustles.sims.controller;
 
 import inc.hustles.sims.service.CustomUserDetailsService;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +24,27 @@ public class GreetingController {
         this.authenticationManager = authenticationManager;
     }
 
-    @GetMapping("/greet")
-    public String greet(Model model){
+    @GetMapping("/home")
+    public String homePage(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken){
+            return "redirect:/login";
+        }
+
         String username = authentication.getName();
         model.addAttribute("username", username);
-        return "greet";
+
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("ROLE_STAFF");
+
+        if(role.equals("ROLE_ADMIN")){
+            return "admin";
+        }else {
+            return "viewer";
+        }
     }
 
     @GetMapping("/login")
