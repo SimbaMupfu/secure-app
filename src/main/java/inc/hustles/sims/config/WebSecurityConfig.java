@@ -25,11 +25,12 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(authorise ->
                 authorise.requestMatchers("/register", "/login").permitAll()
-                        .requestMatchers("/greet").authenticated()
-                        .anyRequest().permitAll())
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/viewr").hasRole("STAFF")
+                        .anyRequest().authenticated())
                 .formLogin(form ->
                         form.loginPage("/login")
-                                .defaultSuccessUrl("/greet")
+                                .defaultSuccessUrl("/home")
                                 .permitAll())
                 .logout(logout ->
                         logout.permitAll()
